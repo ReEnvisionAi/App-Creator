@@ -1,4 +1,3 @@
-```tsx
 import { Routes, Route } from 'react-router-dom'
 import { Suspense, lazy } from 'react'
 import { Toaster } from '@/components/ui/toaster'
@@ -7,7 +6,7 @@ const Home = lazy(() => import('@/app/(main)/page'))
 const Chat = lazy(() => import('@/app/(main)/chats/[id]/page'))
 const Share = lazy(() => import('@/app/share/v2/[messageId]/page'))
 
-export default function App() {
+function App() {
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 antialiased">
       <Suspense fallback={<div>Loading...</div>}>
@@ -21,4 +20,5 @@ export default function App() {
     </div>
   )
 }
-```
+
+export default App
