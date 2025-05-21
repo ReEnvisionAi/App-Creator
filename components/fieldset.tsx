@@ -1,11 +1,16 @@
 import { ComponentProps } from "react";
 
+type FieldsetProps = ComponentProps<"fieldset"> & {
+  disabled?: boolean;
+};
+
 export default function Fieldset({
   children,
+  disabled,
   ...rest
-}: ComponentProps<"fieldset">) {
+}: FieldsetProps) {
   return (
-    <fieldset {...rest}>
+    <fieldset {...rest} disabled={disabled}>
       {children}
     </fieldset>
   );
