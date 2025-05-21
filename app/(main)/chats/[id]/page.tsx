@@ -1,7 +1,5 @@
-```tsx
 import { getPrisma } from "@/lib/prisma";
 import { useParams } from "react-router-dom";
-import { cache } from "react";
 import PageClient from "./page.client";
 
 export default function Page() {
@@ -14,14 +12,13 @@ export default function Page() {
   return <PageClient chat={chat} />;
 }
 
-const getChatById = cache(async (id: string) => {
+const getChatById = async (id: string) => {
   const prisma = getPrisma();
   return await prisma.chat.findFirst({
     where: { id },
     include: { messages: { orderBy: { position: "asc" } } },
   });
-});
+};
 
 export type Chat = NonNullable<Awaited<ReturnType<typeof getChatById>>>;
 export type Message = Chat["messages"][number];
-```

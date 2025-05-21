@@ -1,9 +1,7 @@
-```tsx
 import { useParams } from "react-router-dom";
 import CodeRunner from "@/components/code-runner";
 import { getPrisma } from "@/lib/prisma";
 import { extractFirstCodeBlock } from "@/lib/utils";
-import { cache } from "react";
 
 export default function SharePage() {
   const { messageId } = useParams();
@@ -24,7 +22,7 @@ export default function SharePage() {
   );
 }
 
-const getMessage = cache(async (messageId: string) => {
+const getMessage = async (messageId: string) => {
   const prisma = getPrisma();
   return prisma.message.findUnique({
     where: {
@@ -34,5 +32,4 @@ const getMessage = cache(async (messageId: string) => {
       chat: true,
     },
   });
-});
-```
+};
