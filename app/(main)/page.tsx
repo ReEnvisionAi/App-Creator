@@ -6,11 +6,10 @@ import ArrowRightIcon from "@/components/icons/arrow-right";
 import LightningBoltIcon from "@/components/icons/lightning-bolt";
 import LoadingButton from "@/components/loading-button";
 import Spinner from "@/components/spinner";
-import bgImg from "@/public/halo.png";
+import bgImg from "@/src/assets/halo.png";
 import * as Select from "@radix-ui/react-select";
 import assert from "assert";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { use, useState, useRef, useTransition } from "react";
@@ -57,11 +56,10 @@ export default function Home() {
   return (
     <div className="relative flex grow flex-col">
       <div className="absolute inset-0 flex justify-center">
-        <Image
+        <img
           src={bgImg}
           alt=""
           className="max-h-[953px] w-full max-w-[1200px] object-cover object-top mix-blend-screen"
-          priority
         />
       </div>
 

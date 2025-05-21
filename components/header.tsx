@@ -1,4 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import GithubIcon from "@/components/icons/github-icon";
+import logo from "@/src/assets/logo.png";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -7,7 +9,7 @@ export default function Header() {
     <header className="relative mx-auto flex w-full shrink-0 items-center justify-center py-6">
       <button onClick={() => navigate('/')}>
         <img
-          src="/logo.png"
+          src={logo}
           alt=""
           className="mx-auto h-9 object-contain"
         />
