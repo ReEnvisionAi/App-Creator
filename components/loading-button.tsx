@@ -1,13 +1,15 @@
 import Spinner from "@/components/spinner";
 import { ComponentProps } from "react";
-import { useFormStatus } from "react-dom";
+
+interface LoadingButtonProps extends ComponentProps<"button"> {
+  pending?: boolean;
+}
 
 export default function LoadingButton({
   children,
+  pending = false,
   ...rest
-}: ComponentProps<"button">) {
-  const { pending } = useFormStatus();
-
+}: LoadingButtonProps) {
   return (
     <button {...rest} disabled={pending}>
       <Spinner loading={pending}>{children}</Spinner>
