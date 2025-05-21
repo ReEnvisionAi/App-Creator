@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "together-ai": "^0.1.0"
+  },
+  "scripts": {
+    "dev": "vite"
   }
 }
