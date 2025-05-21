@@ -1,38 +1,7 @@
 import CodeRunner from "@/components/code-runner";
 import { getPrisma } from "@/lib/prisma";
 import { extractFirstCodeBlock } from "@/lib/utils";
-import { Metadata } from "next";
-import { notFound } from "next/navigation";
 import { cache } from "react";
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ messageId: string }>;
-}): Promise<Metadata> {
-  let { messageId } = await params;
-  const message = await getMessage(messageId);
-  if (!message) {
-    notFound();
-  }
-
-  let title = message.chat.title;
-  let searchParams = new URLSearchParams();
-  searchParams.set("prompt", title);
-
-  return {
-    title,
-    description: `An app generated on LlamaCoder.io: ${title}`,
-    openGraph: {
-      images: [`/api/og?${searchParams}`],
-    },
-    twitter: {
-      card: "summary_large_image",
-      images: [`/api/og?${searchParams}`],
-      title,
-    },
-  };
-}
 
 export default async function SharePage({
   params,
@@ -44,12 +13,12 @@ export default async function SharePage({
   const prisma = getPrisma();
   const message = await prisma.message.findUnique({ where: { id: messageId } });
   if (!message) {
-    notFound();
+    throw new Error("Message not found");
   }
 
   const app = extractFirstCodeBlock(message.content);
   if (!app || !app.language) {
-    notFound();
+    throw new Error("No code block found");
   }
 
   return (

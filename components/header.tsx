@@ -1,21 +1,17 @@
-import Image from "next/image";
-
-import GithubIcon from "@/components/icons/github-icon";
-import logo from "@/public/logo.png";
-import Link from "next/link";
+import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
+  const navigate = useNavigate();
+
   return (
     <header className="relative mx-auto flex w-full shrink-0 items-center justify-center py-6">
-      <Link href="/">
-        <Image
-          src={logo}
+      <button onClick={() => navigate('/')}>
+        <img
+          src="/logo.png"
           alt=""
-          quality={100}
           className="mx-auto h-9 object-contain"
-          priority
         />
-      </Link>
+      </button>
 
       <div className="absolute right-3">
         <a

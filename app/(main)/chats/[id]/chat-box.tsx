@@ -1,9 +1,6 @@
-"use client";
-
 import ArrowRightIcon from "@/components/icons/arrow-right";
 import Spinner from "@/components/spinner";
-import assert from "assert";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { createMessage } from "../../actions";
 import { type Chat } from "./page";
@@ -18,7 +15,7 @@ export default function ChatBox({
   isStreaming: boolean;
 }) {
   const [isPending, startTransition] = useTransition();
-  const router = useRouter();
+  const navigate = useNavigate();
   const disabled = isPending || isStreaming;
   const didFocusOnce = useRef(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -64,7 +61,7 @@ export default function ChatBox({
 
             onNewStreamPromise(streamPromise);
             startTransition(() => {
-              router.refresh();
+              navigate(window.location.pathname);
               setPrompt("");
             });
           });

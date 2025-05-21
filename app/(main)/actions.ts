@@ -1,12 +1,9 @@
-"use server";
-
 import { getPrisma } from "@/lib/prisma";
 import {
   getMainCodingPrompt,
   screenshotToCodePrompt,
   softwareArchitectPrompt,
 } from "@/lib/prompts";
-import { notFound } from "next/navigation";
 import Together from "together-ai";
 
 export async function createChat(
@@ -189,7 +186,7 @@ export async function createMessage(
     where: { id: chatId },
     include: { messages: true },
   });
-  if (!chat) notFound();
+  if (!chat) throw new Error("Chat not found");
 
   const maxPosition = Math.max(...chat.messages.map((m) => m.position));
 
