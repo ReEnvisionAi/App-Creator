@@ -1,4 +1,4 @@
-import { getPrisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 import {
   getMainCodingPrompt,
   screenshotToCodePrompt,
@@ -12,16 +12,19 @@ export async function createChat(
   quality: "high" | "low",
   screenshotUrl: string | undefined,
 ) {
-  const prisma = getPrisma();
-  const chat = await prisma.chat.create({
-    data: {
+  const { data: chat, error } = await supabase
+    .from('chat')
+    .insert({
       model,
       quality,
       prompt,
       title: "",
       shadcn: true,
-    },
-  });
+    })
+    .select()
+    .single();
+
+  if (error) throw error;
 
   let options: ConstructorParameters<typeof Together>[0] = {};
   if (process.env.HELICONE_API_KEY) {
@@ -141,38 +144,40 @@ export async function createChat(
     userMessage = prompt;
   }
 
-  let newChat = await prisma.chat.update({
-    where: {
-      id: chat.id,
-    },
-    data: {
-      title,
-      messages: {
-        createMany: {
-          data: [
-            {
-              role: "system",
-              content: getMainCodingPrompt(mostSimilarExample),
-              position: 0,
-            },
-            { role: "user", content: userMessage, position: 1 },
-          ],
-        },
-      },
-    },
-    include: {
-      messages: true,
-    },
-  });
+  const { data: updatedChat, error: updateError } = await supabase
+    .from('chat')
+    .update({ title })
+    .eq('id', chat.id)
+    .select()
+    .single();
 
-  const lastMessage = newChat.messages
-    .sort((a, b) => a.position - b.position)
-    .at(-1);
-  if (!lastMessage) throw new Error("No new message");
+  if (updateError) throw updateError;
+
+  const { data: messages, error: messagesError } = await supabase
+    .from('message')
+    .insert([
+      {
+        role: "system",
+        content: getMainCodingPrompt(mostSimilarExample),
+        position: 0,
+        chat_id: chat.id
+      },
+      {
+        role: "user",
+        content: userMessage,
+        position: 1,
+        chat_id: chat.id
+      }
+    ])
+    .select();
+
+  if (messagesError) throw messagesError;
+
+  if (!messages || messages.length === 0) throw new Error("No messages created");
 
   return {
     chatId: chat.id,
-    lastMessageId: lastMessage.id,
+    lastMessageId: messages[1].id,
   };
 }
 
@@ -181,23 +186,29 @@ export async function createMessage(
   text: string,
   role: "assistant" | "user",
 ) {
-  const prisma = getPrisma();
-  const chat = await prisma.chat.findUnique({
-    where: { id: chatId },
-    include: { messages: true },
-  });
-  if (!chat) throw new Error("Chat not found");
+  const { data: messages, error: messagesError } = await supabase
+    .from('message')
+    .select()
+    .eq('chat_id', chatId)
+    .order('position', { ascending: true });
 
-  const maxPosition = Math.max(...chat.messages.map((m) => m.position));
+  if (messagesError) throw messagesError;
+  if (!messages) throw new Error("Chat not found");
 
-  const newMessage = await prisma.message.create({
-    data: {
+  const maxPosition = Math.max(...messages.map((m) => m.position));
+
+  const { data: newMessage, error } = await supabase
+    .from('message')
+    .insert({
       role,
       content: text,
       position: maxPosition + 1,
-      chatId,
-    },
-  });
+      chat_id: chatId,
+    })
+    .select()
+    .single();
+
+  if (error) throw error;
 
   return newMessage;
 }

@@ -1,4 +1,4 @@
-import { getPrisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 import { useParams } from "react-router-dom";
 import PageClient from "./page.client";
 
@@ -13,12 +13,26 @@ export default function Page() {
 }
 
 const getChatById = async (id: string) => {
-  const prisma = getPrisma();
-  return await prisma.chat.findFirst({
-    where: { id },
-    include: { messages: { orderBy: { position: "asc" } } },
-  });
+  const { data: chat, error: chatError } = await supabase
+    .from('chat')
+    .select()
+    .eq('id', id)
+    .single();
+
+  if (chatError) throw chatError;
+
+  const { data: messages, error: messagesError } = await supabase
+    .from('message')
+    .select()
+    .eq('chat_id', id)
+    .order('position', { ascending: true });
+
+  if (messagesError) throw messagesError;
+
+  return {
+    ...chat,
+    messages: messages || []
+  };
 };
 
 export type Chat = NonNullable<Awaited<ReturnType<typeof getChatById>>>;
-export type Message = Chat["messages"][number];
