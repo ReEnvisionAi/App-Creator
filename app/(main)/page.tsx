@@ -6,7 +6,7 @@ import ArrowRightIcon from "@/components/icons/arrow-right";
 import LightningBoltIcon from "@/components/icons/lightning-bolt";
 import LoadingButton from "@/components/loading-button";
 import Spinner from "@/components/spinner";
-import bgImg from "@/src/assets/halo.png";
+import bgImg from "@/src/assets/halo.png?url";
 import * as Select from "@radix-ui/react-select";
 import assert from "assert";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
@@ -302,6 +302,7 @@ export default function Home() {
                     <div className="pointer-events-none absolute inset-0 -bottom-[1px] rounded bg-blue-500" />
 
                     <LoadingButton
+                      loading={isPending}
                       className="relative inline-flex size-6 items-center justify-center rounded bg-blue-500 font-medium text-white shadow-lg outline-blue-300 hover:bg-blue-500/75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                       type="submit"
                     >

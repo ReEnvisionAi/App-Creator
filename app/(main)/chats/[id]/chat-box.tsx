@@ -39,8 +39,9 @@ export default function ChatBox({
   return (
     <div className="mx-auto mb-5 flex w-full max-w-prose shrink-0 px-8">
       <form
-        className="relative flex w-full"
-        action={async () => {
+        className="relative flex w-full" 
+        onSubmit={async (e) => {
+          e.preventDefault();
           startTransition(async () => {
             const message = await createMessage(chat.id, prompt, "user");
             const streamPromise = fetch(

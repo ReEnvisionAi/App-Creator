@@ -1,18 +1,18 @@
 import Spinner from "@/components/spinner";
 import { ComponentProps } from "react";
 
-interface LoadingButtonProps extends ComponentProps<"button"> {
-  pending?: boolean;
-}
+type LoadingButtonProps = ComponentProps<"button"> & {
+  loading?: boolean;
+};
 
 export default function LoadingButton({
   children,
-  pending = false,
+  loading = false,
   ...rest
 }: LoadingButtonProps) {
   return (
-    <button {...rest} disabled={pending}>
-      <Spinner loading={pending}>{children}</Spinner>
+    <button {...rest} disabled={loading}>
+      <Spinner loading={loading}>{children}</Spinner>
     </button>
   );
 }
