@@ -13,7 +13,9 @@ export default defineConfig({
   publicDir: 'public',
   define: {
     'process.env': {
-      TOGETHER_API_KEY: JSON.stringify(process.env.TOGETHER_API_KEY || ''),
+      OPENAI_API_KEY: JSON.stringify(process.env.OPENAI_API_KEY || ''),
+      OPENAI_API_URL: JSON.stringify(process.env.OPENAI_API_URL || 'https://api.openai.com/v1'),
+      OPENAI_MODEL: JSON.stringify(process.env.OPENAI_MODEL || 'gpt-4-turbo-preview'),
       HELICONE_API_KEY: JSON.stringify(process.env.HELICONE_API_KEY || ''),
       DATABASE_URL: JSON.stringify(process.env.DATABASE_URL || ''),
       NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
