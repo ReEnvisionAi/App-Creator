@@ -15,10 +15,10 @@ import { useContext, useState, useRef, useTransition } from "react";
 import { createChat } from "./actions";
 import { Context } from "./providers";
 import Header from "@/components/header";
-import { useS3Upload } from "next-s3-upload";
 import UploadIcon from "@/components/icons/upload-icon";
 import { XCircleIcon } from "@heroicons/react/20/solid";
 import { MODELS, SUGGESTED_PROMPTS } from "@/lib/constants";
+import { supabase } from "@/lib/supabase";
 
 export default function Home() {
   const { setStreamPromise } = useContext(Context);
@@ -36,15 +36,38 @@ export default function Home() {
 
   const [isPending, startTransition] = useTransition();
 
-  const { uploadToS3 } = useS3Upload();
   const handleScreenshotUpload = async (event: any) => {
     if (prompt.length === 0) setPrompt("Build this");
     setQuality("low");
     setScreenshotLoading(true);
-    let file = event.target.files[0];
-    const { url } = await uploadToS3(file);
-    setScreenshotUrl(url);
-    setScreenshotLoading(false);
+    
+    try {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Generate a unique file name
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `screenshots/${fileName}`;
+
+      // Upload file to Supabase Storage
+      const { data, error } = await supabase.storage
+        .from('screenshots')
+        .upload(filePath, file);
+
+      if (error) throw error;
+
+      // Get public URL for the uploaded file
+      const { data: { publicUrl } } = supabase.storage
+        .from('screenshots')
+        .getPublicUrl(filePath);
+
+      setScreenshotUrl(publicUrl);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    } finally {
+      setScreenshotLoading(false);
+    }
   };
 
   const textareaResizePrompt = prompt
