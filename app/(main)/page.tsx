@@ -12,7 +12,7 @@ import assert from "assert";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { use, useState, useRef, useTransition } from "react";
+import { useContext, useState, useRef, useTransition } from "react";
 import { createChat } from "./actions";
 import { Context } from "./providers";
 import Header from "@/components/header";
@@ -22,7 +22,7 @@ import { XCircleIcon } from "@heroicons/react/20/solid";
 import { MODELS, SUGGESTED_PROMPTS } from "@/lib/constants";
 
 export default function Home() {
-  const { setStreamPromise } = use(Context);
+  const { setStreamPromise } = useContext(Context);
   const router = useRouter();
 
   const [prompt, setPrompt] = useState("");
