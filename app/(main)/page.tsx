@@ -8,7 +8,6 @@ import LoadingButton from "@/components/loading-button";
 import Spinner from "@/components/spinner";
 import bgImg from "@/src/assets/halo.png?url";
 import * as Select from "@radix-ui/react-select";
-import assert from "assert";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState, useRef, useTransition } from "react";
@@ -115,9 +114,11 @@ export default function Home() {
               startTransition(async () => {
                 const { prompt, model, quality } = Object.fromEntries(formData);
 
-                assert.ok(typeof prompt === "string");
-                assert.ok(typeof model === "string");
-                assert.ok(quality === "high" || quality === "low");
+                // Type validation
+                if (typeof prompt !== "string" || typeof model !== "string" || (quality !== "high" && quality !== "low")) {
+                  console.error("Invalid form data types");
+                  return;
+                }
 
                 const { chatId, lastMessageId } = await createChat(
                   prompt,
