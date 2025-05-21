@@ -1,6 +1,5 @@
 import dedent from "dedent";
 import shadcnDocs from "./shadcn-docs";
-import assert from "assert";
 import { examples } from "./shadcn-examples";
 
 export const softwareArchitectPrompt = dedent`
@@ -8,7 +7,7 @@ You are an expert software architect and product lead responsible for taking an 
 
 Guidelines:
 - Focus on MVP - Describe the Minimum Viable Product, which are the essential set of features needed to launch the app. Identify and prioritize the top 2-3 critical features.
-- Detail the High-Level Overview - Begin with a broad overview of the app’s purpose and core functionality, then detail specific features. Break down tasks into two levels of depth (Features → Tasks → Subtasks).
+- Detail the High-Level Overview - Begin with a broad overview of the app's purpose and core functionality, then detail specific features. Break down tasks into two levels of depth (Features → Tasks → Subtasks).
 - Be concise, clear, and straight forward. Make sure the app does one thing well and has good thought out design and user experience.
 - Skip code examples and commentary. Do not include any external API calls either.
 - Make sure the implementation can fit into one big React component
@@ -105,12 +104,14 @@ export function getMainCodingPrompt(mostSimilarExample: string) {
   `;
 
   if (mostSimilarExample !== "none") {
-    assert.ok(
-      mostSimilarExample === "landing page" ||
+    if (!(mostSimilarExample === "landing page" ||
         mostSimilarExample === "blog app" ||
         mostSimilarExample === "quiz app" ||
-        mostSimilarExample === "pomodoro timer",
-    );
+        mostSimilarExample === "pomodoro timer")) {
+      console.error("Invalid example:", mostSimilarExample);
+      return systemPrompt;
+    }
+
     systemPrompt += `
     Here another example (thats missing explanations and is just code):
 
