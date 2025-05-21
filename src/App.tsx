@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import Chat from './pages/Chat'
-import Share from './pages/Share'
+import Home from '../app/(main)/page'
+import Chat from '../app/(main)/chats/[id]/page'
+import Share from '../app/share/v2/[messageId]/page'
 import { Toaster } from './components/ui/toaster'
 
 export default function App() {
