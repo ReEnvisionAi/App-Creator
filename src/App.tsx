@@ -1,18 +1,24 @@
+```tsx
 import { Routes, Route } from 'react-router-dom'
-import Home from '@/app/(main)/page'
-import Chat from '@/app/(main)/chats/[id]/page'
-import Share from '@/app/share/v2/[messageId]/page'
+import { Suspense, lazy } from 'react'
 import { Toaster } from '@/components/ui/toaster'
+
+const Home = lazy(() => import('@/app/(main)/page'))
+const Chat = lazy(() => import('@/app/(main)/chats/[id]/page'))
+const Share = lazy(() => import('@/app/share/v2/[messageId]/page'))
 
 export default function App() {
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 antialiased">
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/chats/:id" element={<Chat />} />
-        <Route path="/share/v2/:messageId" element={<Share />} />
-      </Routes>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/chats/:id" element={<Chat />} />
+          <Route path="/share/v2/:messageId" element={<Share />} />
+        </Routes>
+      </Suspense>
       <Toaster />
     </div>
   )
 }
+```

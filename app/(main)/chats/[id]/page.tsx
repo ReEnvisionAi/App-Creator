@@ -1,17 +1,15 @@
+```tsx
 import { getPrisma } from "@/lib/prisma";
-import { notFound } from "next/navigation";
+import { useParams } from "react-router-dom";
 import { cache } from "react";
 import PageClient from "./page.client";
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const id = (await params).id;
-  const chat = await getChatById(id);
+export default function Page() {
+  const { id } = useParams();
+  if (!id) throw new Error("No ID provided");
 
-  if (!chat) notFound();
+  const chat = getChatById(id);
+  if (!chat) throw new Error("Chat not found");
 
   return <PageClient chat={chat} />;
 }
@@ -26,6 +24,4 @@ const getChatById = cache(async (id: string) => {
 
 export type Chat = NonNullable<Awaited<ReturnType<typeof getChatById>>>;
 export type Message = Chat["messages"][number];
-
-export const runtime = "edge";
-export const maxDuration = 45;
+```

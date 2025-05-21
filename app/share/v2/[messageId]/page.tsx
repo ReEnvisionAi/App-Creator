@@ -1,20 +1,16 @@
+```tsx
+import { useParams } from "react-router-dom";
 import CodeRunner from "@/components/code-runner";
 import { getPrisma } from "@/lib/prisma";
 import { extractFirstCodeBlock } from "@/lib/utils";
 import { cache } from "react";
 
-export default async function SharePage({
-  params,
-}: {
-  params: Promise<{ messageId: string }>;
-}) {
-  const { messageId } = await params;
+export default function SharePage() {
+  const { messageId } = useParams();
+  if (!messageId) throw new Error("No message ID provided");
 
-  const prisma = getPrisma();
-  const message = await prisma.message.findUnique({ where: { id: messageId } });
-  if (!message) {
-    throw new Error("Message not found");
-  }
+  const message = getMessage(messageId);
+  if (!message) throw new Error("Message not found");
 
   const app = extractFirstCodeBlock(message.content);
   if (!app || !app.language) {
@@ -39,3 +35,4 @@ const getMessage = cache(async (messageId: string) => {
     },
   });
 });
+```
