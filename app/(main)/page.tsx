@@ -108,8 +108,10 @@ export default function Home() {
           </h1>
 
           <form
-            className="relative w-full max-w-2xl pt-6 lg:pt-12"
-            action={async (formData) => {
+            className="relative w-full max-w-2xl pt-6 lg:pt-12" 
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const formData = new FormData(e.currentTarget);
               startTransition(async () => {
                 const { prompt, model, quality } = Object.fromEntries(formData);
 
