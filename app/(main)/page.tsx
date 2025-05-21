@@ -10,8 +10,7 @@ import bgImg from "@/src/assets/halo.png";
 import * as Select from "@radix-ui/react-select";
 import assert from "assert";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState, useRef, useTransition } from "react";
 import { createChat } from "./actions";
 import { Context } from "./providers";
@@ -23,7 +22,7 @@ import { MODELS, SUGGESTED_PROMPTS } from "@/lib/constants";
 
 export default function Home() {
   const { setStreamPromise } = useContext(Context);
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const [prompt, setPrompt] = useState("");
   const [model, setModel] = useState(MODELS[0].value);
@@ -117,7 +116,7 @@ export default function Home() {
 
                 startTransition(() => {
                   setStreamPromise(streamPromise);
-                  router.push(`/chats/${chatId}`);
+                  navigate(`/chats/${chatId}`);
                 });
               });
             }}
@@ -289,7 +288,6 @@ export default function Home() {
                         </div>
                       </label>
                       <input
-                        // name="screenshot"
                         id="screenshot"
                         type="file"
                         accept="image/png, image/jpeg, image/webp"
@@ -357,7 +355,7 @@ export default function Home() {
           </div>
           <div className="flex space-x-4 pb-4 sm:pb-0">
             <Link
-              href="https://twitter.com/nutlope"
+              to="https://twitter.com/nutlope"
               className="group"
               aria-label=""
             >
@@ -369,7 +367,7 @@ export default function Home() {
               </svg>
             </Link>
             <Link
-              href="https://github.com/Nutlope/llamacoder"
+              to="https://github.com/Nutlope/llamacoder"
               className="group"
               aria-label=""
             >
@@ -410,6 +408,3 @@ function LoadingMessage({
     </div>
   );
 }
-
-export const runtime = "edge";
-export const maxDuration = 45;
