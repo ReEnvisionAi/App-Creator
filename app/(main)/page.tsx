@@ -94,7 +94,7 @@ export default function Home() {
             target="_blank"
           >
             <span className="text-center">
-              Powered by ReEnvision AI. Used by 1.1M+
+              Powered by ReEnvision AI Used by thousands
             </span>
           </a>
 
