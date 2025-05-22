@@ -3,7 +3,7 @@ import CodeRunner from "@/components/code-runner";
 import { supabase } from "@/lib/supabase";
 import { extractFirstCodeBlock } from "@/lib/utils";
 
-export default function SharePage() {
+export default async function SharePage() {
   const { messageId } = useParams();
   if (!messageId) throw new Error("No message ID provided");
 
