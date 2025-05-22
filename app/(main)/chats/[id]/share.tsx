@@ -1,7 +1,6 @@
 "use client";
 
 import ShareIcon from "@/components/icons/share-icon";
-import { toast } from "@/hooks/use-toast";
 import { Message } from "@prisma/client";
 
 export function Share({ message }: { message?: Message }) {
@@ -11,13 +10,8 @@ export function Share({ message }: { message?: Message }) {
     const baseUrl = window.location.href;
     const shareUrl = new URL(`/share/v2/${message.id}`, baseUrl);
 
-    toast({
-      title: "App Published!",
-      description: `App URL copied to clipboard: ${shareUrl.href}`,
-      variant: "default",
-    });
-
     await navigator.clipboard.writeText(shareUrl.href);
+    alert(`App URL copied to clipboard: ${shareUrl.href}`);
   }
 
   return (
