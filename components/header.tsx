@@ -7,12 +7,8 @@ export default function Header() {
 
   return (
     <header className="relative mx-auto flex w-full shrink-0 items-center justify-center py-6">
-      <button onClick={() => navigate('/')}>
-        <img
-          src={logo}
-          alt=""
-          className="mx-auto h-9 object-contain"
-        />
+      <button onClick={() => navigate('/')} className="text-2xl font-bold">
+        LlamaCoder
       </button>
 
       <div className="absolute right-3">
