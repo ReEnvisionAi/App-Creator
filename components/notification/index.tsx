@@ -108,3 +108,5 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     </NotificationContext.Provider>
   )
 }
+
+export { NotificationContext }
