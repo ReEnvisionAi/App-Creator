@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import GithubIcon from "@/components/icons/github-icon";
-import LoginMenu from "@/components/LoginMenu";
+import LoginMenu from "@/src/components/LoginMenu";
 
 export default function Header() {
   const navigate = useNavigate();

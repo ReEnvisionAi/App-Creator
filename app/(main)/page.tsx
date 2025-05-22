@@ -18,7 +18,7 @@ import UploadIcon from "@/components/icons/upload-icon";
 import { XCircleIcon } from "@heroicons/react/20/solid";
 import { MODELS, SUGGESTED_PROMPTS } from "@/lib/constants";
 import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/auth/AuthProvider";
+import { useAuth } from "@/src/auth/AuthProvider";
 
 export default function Home() {
   const { setStreamPromise } = useContext(Context);
