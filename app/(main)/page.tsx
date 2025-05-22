@@ -18,10 +18,12 @@ import UploadIcon from "@/components/icons/upload-icon";
 import { XCircleIcon } from "@heroicons/react/20/solid";
 import { MODELS, SUGGESTED_PROMPTS } from "@/lib/constants";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/auth/AuthProvider";
 
 export default function Home() {
   const { setStreamPromise } = useContext(Context);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [prompt, setPrompt] = useState("");
   const [model, setModel] = useState(MODELS[0].value);
@@ -110,6 +112,11 @@ export default function Home() {
               e.preventDefault();
               const formData = new FormData(e.currentTarget);
               startTransition(async () => {
+                if (!user) {
+                  alert("Please sign in to create an app");
+                  return;
+                }
+
                 const { prompt, model, quality } = Object.fromEntries(formData);
 
                 // Type validation
@@ -119,10 +126,13 @@ export default function Home() {
                 }
 
                 const { chatId, lastMessageId } = await createChat(
-                  prompt,
-                  model,
-                  quality,
+                const { chatId, lastMessageId } = await createChat({
+                  prompt: prompt as string,
+                  model: model as string,
+                  quality: quality as "high" | "low",
                   screenshotUrl,
+                  userId: user.id,
+                });
                 );
 
                 const streamPromise = fetch(

@@ -1,17 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import GithubIcon from "@/components/icons/github-icon";
-import logo from "@/src/assets/logo.png?url";
+import LoginMenu from "@/components/LoginMenu";
 
 export default function Header() {
   const navigate = useNavigate();
 
   return (
-    <header className="relative mx-auto flex w-full shrink-0 items-center justify-center py-6">
+    <header className="relative mx-auto flex w-full shrink-0 items-center justify-between px-6 py-6">
       <button onClick={() => navigate('/')} className="text-2xl font-bold text-blue-500">
         ReEnvision AI
       </button>
 
-      <div className="absolute right-3">
+      <div className="flex items-center gap-6">
+        <LoginMenu />
         <a
           href="https://github.com/nutlope/reenvision-ai"
           target="_blank"
