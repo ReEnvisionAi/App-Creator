@@ -6,19 +6,12 @@ import {
 } from "@/lib/prompts";
 import Together from "together-ai";
 
-export async function createChat({
-  prompt,
-  model,
-  quality,
-  screenshotUrl,
-  userId,
-}: {
+export async function createChat(
   prompt: string,
   model: string,
   quality: "high" | "low",
   screenshotUrl: string | undefined,
-  userId: string,
-}) {
+) {
   const { data: chat, error } = await supabase
     .from('chat')
     .insert({
@@ -27,7 +20,6 @@ export async function createChat({
       prompt,
       title: "",
       shadcn: true,
-      user_id: userId,
     })
     .select()
     .single();

@@ -3,7 +3,8 @@
 import { createMessage } from "@/app/(main)/actions";
 import LogoSmall from "@/components/icons/logo-small";
 import { splitByFirstCodeFence } from "@/lib/utils";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { startTransition, use, useEffect, useRef, useState } from "react";
 import { ChatCompletionStream } from "together-ai/lib/ChatCompletionStream.mjs";
 import ChatBox from "./chat-box";
@@ -15,7 +16,6 @@ import { Context } from "../../providers";
 
 export default function PageClient({ chat }: { chat: Chat }) {
   const context = use(Context);
-  const navigate = useNavigate();
   const [streamPromise, setStreamPromise] = useState<
     Promise<ReadableStream> | undefined
   >(context.streamPromise);
@@ -24,6 +24,7 @@ export default function PageClient({ chat }: { chat: Chat }) {
     chat.messages.some((m) => m.role === "assistant"),
   );
   const [activeTab, setActiveTab] = useState<"code" | "preview">("preview");
+  const router = useRouter();
   const isHandlingStreamRef = useRef(false);
   const [activeMessage, setActiveMessage] = useState(
     chat.messages.filter((m) => m.role === "assistant").at(-1),
@@ -79,21 +80,21 @@ export default function PageClient({ chat }: { chat: Chat }) {
               setStreamText("");
               setStreamPromise(undefined);
               setActiveMessage(message);
-              navigate(window.location.pathname);
+              router.refresh();
             });
           });
         });
     }
 
     f();
-  }, [chat.id, navigate, streamPromise, context]);
+  }, [chat.id, router, streamPromise, context]);
 
   return (
     <div className="h-dvh">
       <div className="flex h-full">
         <div className="mx-auto flex w-full shrink-0 flex-col overflow-hidden lg:w-1/2">
           <div className="flex items-center gap-4 px-4 py-4">
-            <Link to="/">
+            <Link href="/">
               <LogoSmall />
             </Link>
             <p className="italic text-gray-500">{chat.title}</p>
@@ -166,7 +167,7 @@ export default function PageClient({ chat }: { chat: Chat }) {
                     return res.body;
                   });
                   setStreamPromise(streamPromise);
-                  navigate(window.location.pathname);
+                  router.refresh();
                 });
               }}
             />
