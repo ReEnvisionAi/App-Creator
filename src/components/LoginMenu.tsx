@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { supabase } from '@/lib/supabase';
-import { useAuth } from '../../src/auth/AuthProvider';
-import { Button } from '../../components/ui/button';
+import { useAuth } from '@/auth/AuthProvider';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../../components/ui/dialog";
+} from "@/components/ui/dialog";
 
 export default function LoginMenu() {
   const { user } = useAuth();
