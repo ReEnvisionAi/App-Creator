@@ -212,7 +212,3 @@ export async function createMessage(
 
   return newMessage;
 }
-
-export { createMessage }
-
-export { createChat }
