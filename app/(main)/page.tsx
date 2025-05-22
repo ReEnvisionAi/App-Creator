@@ -90,11 +90,11 @@ export default function Home() {
         <div className="mt-10 flex grow flex-col items-center px-4 lg:mt-16">
           <a
             className="mb-4 inline-flex shrink-0 items-center rounded-full border-[0.5px] bg-white px-7 py-2 text-xs text-gray-800 shadow-[0px_1px_1px_0px_rgba(0,0,0,0.25)] md:text-base"
-            href="https://togetherai.link/?utm_source=reenvision-ai&utm_medium=referral&utm_campaign=example-app"
+            href="https://together.ai"
             target="_blank"
           >
             <span className="text-center">
-              Powered by <span className="font-semibold">Together AI</span>. Used by <span className="font-semibold">1.1M+</span>
+              Powered by Together AI. Used by 1.1M+
             </span>
           </a>
 
