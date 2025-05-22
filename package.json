@@ -1,5 +1,11 @@
 {
+  "scripts": {
+    "dev": "vite"
+  },
   "dependencies": {
     "animejs": "^3.2.2"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
   }
 }
