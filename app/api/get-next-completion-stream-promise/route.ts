@@ -1,41 +1,44 @@
-import { PrismaClient } from "@prisma/client";
-import { PrismaNeon } from "@prisma/adapter-neon";
-import { Pool } from "@neondatabase/serverless";
 import { z } from "zod";
 import OpenAI from "openai";
 import Together from "together-ai";
 import { MODELS } from "@/lib/constants";
+import { supabase } from "@/lib/supabase";
 
 export async function POST(req: Request) {
-  const neon = new Pool({ connectionString: process.env.DATABASE_URL });
-  const adapter = new PrismaNeon(neon);
-  const prisma = new PrismaClient({ adapter });
   const { messageId, model } = await req.json();
 
-  const message = await prisma.message.findUnique({
-    where: { id: messageId },
-  });
+  const { data: message, error: messageError } = await supabase
+    .from('message')
+    .select()
+    .eq('id', messageId)
+    .single();
 
-  if (!message) {
+  if (messageError || !message) {
     return new Response(null, { status: 404 });
   }
 
-  const messagesRes = await prisma.message.findMany({
-    where: { chatId: message.chatId, position: { lte: message.position } },
-    orderBy: { position: "asc" },
-  });
+  const { data: messages, error: messagesError } = await supabase
+    .from('message')
+    .select()
+    .eq('chat_id', message.chat_id)
+    .lte('position', message.position)
+    .order('position', { ascending: true });
 
-  let messages = z
+  if (messagesError || !messages) {
+    return new Response("Failed to fetch messages", { status: 500 });
+  }
+
+  let parsedMessages = z
     .array(
       z.object({
         role: z.enum(["system", "user", "assistant"]),
         content: z.string(),
       }),
     )
-    .parse(messagesRes);
+    .parse(messages);
 
-  if (messages.length > 10) {
-    messages = [messages[0], messages[1], messages[2], ...messages.slice(-7)];
+  if (parsedMessages.length > 10) {
+    parsedMessages = [parsedMessages[0], parsedMessages[1], parsedMessages[2], ...parsedMessages.slice(-7)];
   }
 
   const selectedModel = MODELS.find(m => m.value === model);
@@ -54,7 +57,7 @@ export async function POST(req: Request) {
 
     const stream = await openai.chat.completions.create({
       model,
-      messages: messages.map((m) => ({ role: m.role, content: m.content })),
+      messages: parsedMessages.map((m) => ({ role: m.role, content: m.content })),
       stream: true,
       temperature: 0.2,
       max_tokens: 9000,
@@ -69,7 +72,7 @@ export async function POST(req: Request) {
     options.defaultHeaders = {
       "Helicone-Auth": `Bearer ${process.env.HELICONE_API_KEY}`,
       "Helicone-Property-appname": "LlamaCoder",
-      "Helicone-Session-Id": message.chatId,
+      "Helicone-Session-Id": message.chat_id,
       "Helicone-Session-Name": "LlamaCoder Chat",
     };
   }
@@ -78,7 +81,7 @@ export async function POST(req: Request) {
 
   const stream = await together.chat.completions.create({
     model,
-    messages: messages.map((m) => ({ role: m.role, content: m.content })),
+    messages: parsedMessages.map((m) => ({ role: m.role, content: m.content })),
     stream: true,
     temperature: 0.2,
     max_tokens: 9000,

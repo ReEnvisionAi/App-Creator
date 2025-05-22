@@ -1,13 +1,13 @@
 import { useParams } from "react-router-dom";
 import CodeRunner from "@/components/code-runner";
-import { getPrisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 import { extractFirstCodeBlock } from "@/lib/utils";
 
 export default function SharePage() {
   const { messageId } = useParams();
   if (!messageId) throw new Error("No message ID provided");
 
-  const message = getMessage(messageId);
+  const message = await getMessage(messageId);
   if (!message) throw new Error("Message not found");
 
   const app = extractFirstCodeBlock(message.content);
@@ -23,13 +23,15 @@ export default function SharePage() {
 }
 
 const getMessage = async (messageId: string) => {
-  const prisma = getPrisma();
-  return prisma.message.findUnique({
-    where: {
-      id: messageId,
-    },
-    include: {
-      chat: true,
-    },
-  });
+  const { data: message, error } = await supabase
+    .from('message')
+    .select(`
+      *,
+      chat:chat_id (*)
+    `)
+    .eq('id', messageId)
+    .single();
+
+  if (error) throw error;
+  return message;
 };
