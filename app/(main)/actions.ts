@@ -7,13 +7,18 @@ import {
 import Together from "together-ai";
 
 export async function createChat({
+  prompt,
+  model,
+  quality,
+  screenshotUrl,
+  userId,
+}: {
   prompt: string,
   model: string,
   quality: "high" | "low",
   screenshotUrl: string | undefined,
   userId: string,
 }) {
-) {
   const { data: chat, error } = await supabase
     .from('chat')
     .insert({
