@@ -125,7 +125,6 @@ export default function Home() {
                   return;
                 }
 
-                const { chatId, lastMessageId } = await createChat(
                 const { chatId, lastMessageId } = await createChat({
                   prompt: prompt as string,
                   model: model as string,
@@ -133,7 +132,6 @@ export default function Home() {
                   screenshotUrl,
                   userId: user.id,
                 });
-                );
 
                 const streamPromise = fetch(
                   "/api/get-next-completion-stream-promise",
