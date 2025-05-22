@@ -94,9 +94,7 @@ export default function Home() {
             target="_blank"
           >
             <span className="text-center">
-              Powered by <span className="font-semibold">Together AI</span>.
-              Used by
-              <span className="font-semibold"> 1.1M+ users. </span>
+              Powered by <span className="font-semibold">Together AI</span>. Used by <span className="font-semibold">1.1M+</span>
             </span>
           </a>
 
