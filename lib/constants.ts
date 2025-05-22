@@ -1,24 +1,38 @@
 export const MODELS = [
   {
+    label: "GPT-4 Turbo",
+    value: "gpt-4-turbo-preview",
+    provider: "openai"
+  },
+  {
+    label: "GPT-3.5 Turbo",
+    value: "gpt-3.5-turbo",
+    provider: "openai"
+  },
+  {
     label: "DeepSeek V3",
     value: "deepseek-ai/DeepSeek-V3",
+    provider: "together"
   },
   {
     label: "Qwen 2.5 Coder 32B",
     value: "Qwen/Qwen2.5-Coder-32B-Instruct",
+    provider: "together"
   },
-
   {
     label: "Llama 4 Maverick",
     value: "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+    provider: "together"
   },
   {
     label: "Llama 3.3 70B",
     value: "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+    provider: "together"
   },
   {
     label: "Llama 3.1 405B",
     value: "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo",
+    provider: "together"
   },
 ];
 

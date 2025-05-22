@@ -2,7 +2,9 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
 import { Pool } from "@neondatabase/serverless";
 import { z } from "zod";
+import OpenAI from "openai";
 import Together from "together-ai";
+import { MODELS } from "@/lib/constants";
 
 export async function POST(req: Request) {
   const neon = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -36,6 +38,31 @@ export async function POST(req: Request) {
     messages = [messages[0], messages[1], messages[2], ...messages.slice(-7)];
   }
 
+  const selectedModel = MODELS.find(m => m.value === model);
+  if (!selectedModel) {
+    return new Response("Model not found", { status: 404 });
+  }
+
+  if (selectedModel.provider === "openai") {
+    if (!process.env.OPENAI_API_KEY) {
+      return new Response("OpenAI API key not configured", { status: 500 });
+    }
+
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
+    const stream = await openai.chat.completions.create({
+      model,
+      messages: messages.map((m) => ({ role: m.role, content: m.content })),
+      stream: true,
+      temperature: 0.2,
+      max_tokens: 9000,
+    });
+
+    return new Response(stream.toReadableStream());
+  }
+
   let options: ConstructorParameters<typeof Together>[0] = {};
   if (process.env.HELICONE_API_KEY) {
     options.baseURL = "https://together.helicone.ai/v1";
@@ -49,7 +76,7 @@ export async function POST(req: Request) {
 
   const together = new Together(options);
 
-  const res = await together.chat.completions.create({
+  const stream = await together.chat.completions.create({
     model,
     messages: messages.map((m) => ({ role: m.role, content: m.content })),
     stream: true,
@@ -57,7 +84,7 @@ export async function POST(req: Request) {
     max_tokens: 9000,
   });
 
-  return new Response(res.toReadableStream());
+  return new Response(stream.toReadableStream());
 }
 
 export const runtime = "edge";
