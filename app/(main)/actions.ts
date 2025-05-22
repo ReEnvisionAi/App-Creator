@@ -13,17 +13,14 @@ export async function createChat(
   screenshotUrl: string | undefined,
 ) {
   const { data: chat, error } = await supabase
-    .from("chat")
-    .insert([
-      {
-        model,
-        quality,
-        prompt,
-        title: "",
-        shadcn: true,
-        user_id: (await supabase.auth.getUser()).data.user?.id,
-      },
-    ])
+    .from('chat')
+    .insert({
+      model,
+      quality,
+      prompt,
+      title: "",
+      shadcn: true,
+    })
     .select()
     .single();
 
@@ -215,3 +212,7 @@ export async function createMessage(
 
   return newMessage;
 }
+
+export { createMessage }
+
+export { createChat }
