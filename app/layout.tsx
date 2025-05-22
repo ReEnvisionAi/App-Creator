@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import PlausibleProvider from "next-plausible";
 import "./globals.css";
 
-let title = "Llama Coder – AI Code Generator";
-let description = "Generate your next app with Llama 3.1 405B";
-let url = "https://llamacoder.io/";
-let ogimage = "https://llamacoder.io/og-image.png";
-let sitename = "llamacoder.io";
+let title = "ReEnvision AI – App Builder";
+let description = "Transform your ideas into fully functional applications with AI";
+let url = "https://reenvision.ai/";
+let ogimage = "https://reenvision.ai/og-image.png";
+let sitename = "reenvision.ai";
 
 export const metadata: Metadata = {
   metadataBase: new URL(url),
