@@ -1,5 +1,5 @@
 import { createContext, useContext, useRef, useState } from 'react'
-import anime from 'animejs/lib/anime.es.js'
+import anime from 'animejs'
 import { X } from 'lucide-react'
 
 type NotificationType = 'success' | 'error' | 'info'
