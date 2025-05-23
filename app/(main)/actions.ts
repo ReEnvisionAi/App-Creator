@@ -12,6 +12,10 @@ export async function createChat(
   quality: "high" | "low",
   screenshotUrl: string | undefined,
 ) {
+  // Get the current user's session
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("User must be authenticated to create a chat");
+
   const { data: chat, error } = await supabase
     .from('chat')
     .insert({
@@ -20,6 +24,7 @@ export async function createChat(
       prompt,
       title: "",
       shadcn: true,
+      user_id: user.id, // Add the user_id to satisfy RLS policy
     })
     .select()
     .single();
