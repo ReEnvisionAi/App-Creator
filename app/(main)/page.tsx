@@ -109,39 +109,39 @@ export default function Home() {
             onSubmit={async (e) => {
               e.preventDefault();
               const formData = new FormData(e.currentTarget);
-              startTransition(async () => {
-                const { prompt, model, quality } = Object.fromEntries(formData);
+              startTransition(() => {
+                (async () => {
+                  const { prompt, model, quality } = Object.fromEntries(formData);
 
-                // Type validation
-                if (typeof prompt !== "string" || typeof model !== "string" || (quality !== "high" && quality !== "low")) {
-                  console.error("Invalid form data types");
-                  return;
-                }
-
-                const { chatId, lastMessageId } = await createChat(
-                  prompt,
-                  model,
-                  quality,
-                  screenshotUrl,
-                );
-
-                const streamPromise = fetch(
-                  "/api/get-next-completion-stream-promise",
-                  {
-                    method: "POST",
-                    body: JSON.stringify({ messageId: lastMessageId, model }),
-                  },
-                ).then((res) => {
-                  if (!res.body) {
-                    throw new Error("No body on response");
+                  // Type validation
+                  if (typeof prompt !== "string" || typeof model !== "string" || (quality !== "high" && quality !== "low")) {
+                    console.error("Invalid form data types");
+                    return;
                   }
-                  return res.body;
-                });
 
-                startTransition(() => {
+                  const { chatId, lastMessageId } = await createChat(
+                    prompt,
+                    model,
+                    quality,
+                    screenshotUrl,
+                  );
+
+                  const streamPromise = fetch(
+                    "/api/get-next-completion-stream-promise",
+                    {
+                      method: "POST",
+                      body: JSON.stringify({ messageId: lastMessageId, model }),
+                    },
+                  ).then((res) => {
+                    if (!res.body) {
+                      throw new Error("No body on response");
+                    }
+                    return res.body;
+                  });
+
                   setStreamPromise(streamPromise);
                   navigate(`/chats/${chatId}`);
-                });
+                })();
               });
             }}
           >
