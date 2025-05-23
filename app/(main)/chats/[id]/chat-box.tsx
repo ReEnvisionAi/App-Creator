@@ -42,29 +42,29 @@ export default function ChatBox({
         className="relative flex w-full" 
         onSubmit={async (e) => {
           e.preventDefault();
-          startTransition(async () => {
-            const message = await createMessage(chat.id, prompt, "user");
-            const streamPromise = fetch(
-              "/api/get-next-completion-stream-promise",
-              {
-                method: "POST",
-                body: JSON.stringify({
-                  messageId: message.id,
-                  model: chat.model,
-                }),
-              },
-            ).then((res) => {
-              if (!res.body) {
-                throw new Error("No body on response");
-              }
-              return res.body;
-            });
+          startTransition(() => {
+            (async () => {
+              const message = await createMessage(chat.id, prompt, "user");
+              const streamPromise = fetch(
+                "/api/get-next-completion-stream-promise",
+                {
+                  method: "POST",
+                  body: JSON.stringify({
+                    messageId: message.id,
+                    model: chat.model,
+                  }),
+                },
+              ).then((res) => {
+                if (!res.body) {
+                  throw new Error("No body on response");
+                }
+                return res.body;
+              });
 
-            onNewStreamPromise(streamPromise);
-            startTransition(() => {
+              onNewStreamPromise(streamPromise);
               navigate(window.location.pathname);
               setPrompt("");
-            });
+            })();
           });
         }}
       >

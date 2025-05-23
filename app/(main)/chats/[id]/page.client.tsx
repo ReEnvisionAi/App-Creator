@@ -2,7 +2,7 @@ import { createMessage } from "@/app/(main)/actions";
 import LogoSmall from "@/components/icons/logo-small";
 import { splitByFirstCodeFence } from "@/lib/utils";
 import { Link, useNavigate } from "react-router-dom";
-import { startTransition, use, useEffect, useRef, useState } from "react";
+import { startTransition, useContext, useEffect, useRef, useState } from "react";
 import { ChatCompletionStream } from "together-ai/lib/ChatCompletionStream.mjs";
 import ChatBox from "./chat-box";
 import ChatLog from "./chat-log";
@@ -12,7 +12,7 @@ import type { Chat } from "./page";
 import { Context } from "../../providers";
 
 export default function PageClient({ chat }: { chat: Chat }) {
-  const context = use(Context);
+  const context = useContext(Context);
   const navigate = useNavigate();
   const [streamPromise, setStreamPromise] = useState<
     Promise<ReadableStream> | undefined
@@ -66,19 +66,18 @@ export default function PageClient({ chat }: { chat: Chat }) {
         })
         .on("finalContent", async (finalText) => {
           startTransition(async () => {
-            const message = await createMessage(
-              chat.id,
-              finalText,
-              "assistant",
-            );
-
-            startTransition(() => {
+            (async () => {
+              const message = await createMessage(
+                chat.id,
+                finalText,
+                "assistant",
+              );
               isHandlingStreamRef.current = false;
               setStreamText("");
               setStreamPromise(undefined);
               setActiveMessage(message);
               navigate(0); // Refresh the current route
-            });
+            })();
           });
         });
     }
@@ -140,31 +139,33 @@ export default function PageClient({ chat }: { chat: Chat }) {
               }}
               onRequestFix={(error: string) => {
                 startTransition(async () => {
-                  let newMessageText = `The code is not working. Can you fix it? Here's the error:\n\n`;
-                  newMessageText += error.trimStart();
-                  const message = await createMessage(
-                    chat.id,
-                    newMessageText,
-                    "user",
-                  );
+                  (async () => {
+                    let newMessageText = `The code is not working. Can you fix it? Here's the error:\n\n`;
+                    newMessageText += error.trimStart();
+                    const message = await createMessage(
+                      chat.id,
+                      newMessageText,
+                      "user",
+                    );
 
-                  const streamPromise = fetch(
-                    "/api/get-next-completion-stream-promise",
-                    {
-                      method: "POST",
-                      body: JSON.stringify({
-                        messageId: message.id,
-                        model: chat.model,
-                      }),
-                    },
-                  ).then((res) => {
-                    if (!res.body) {
-                      throw new Error("No body on response");
-                    }
-                    return res.body;
-                  });
-                  setStreamPromise(streamPromise);
-                  navigate(0); // Refresh the current route
+                    const streamPromise = fetch(
+                      "/api/get-next-completion-stream-promise",
+                      {
+                        method: "POST",
+                        body: JSON.stringify({
+                          messageId: message.id,
+                          model: chat.model,
+                        }),
+                      },
+                    ).then((res) => {
+                      if (!res.body) {
+                        throw new Error("No body on response");
+                      }
+                      return res.body;
+                    });
+                    setStreamPromise(streamPromise);
+                    navigate(0); // Refresh the current route
+                  })();
                 });
               }}
             />
