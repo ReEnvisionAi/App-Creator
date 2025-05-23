@@ -14,5 +14,10 @@ export const supabase = createClient(
     db: {
       schema: 'app'
     }
+  import.meta.env.VITE_SUPABASE_ANON_KEY,
+  {
+    db: {
+      schema: 'app'
+    }
   }
 )
