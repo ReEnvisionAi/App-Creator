@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url'
 export default defineConfig({
   plugins: [react()],
   server: {
-    middlewareMode: true,
+    port: 5173,
     fs: {
       strict: false
     },
