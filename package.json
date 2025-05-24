@@ -1,5 +1,9 @@
 {
+  "scripts": {
+    "dev": "vite"
+  },
   "dependencies": {
-    "@radix-ui/react-label": "^2.0.2"
+    "@radix-ui/react-label": "^2.0.2",
+    "vite": "^5.0.0"
   }
 }
