@@ -1,6 +1,10 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
 export function extractFirstCodeBlock(input: string) {
   // 1) We use a more general pattern for the code fence:
   //    - ^```([^\n]*) captures everything after the triple backticks up to the newline.
@@ -172,3 +176,8 @@ export function splitByFirstCodeFence(markdown: string) {
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+
+export { extractFirstCodeBlock }
+
+export { splitByFirstCodeFence }
