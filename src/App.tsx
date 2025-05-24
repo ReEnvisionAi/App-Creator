@@ -4,6 +4,7 @@ import { Suspense, lazy } from 'react'
 const Home = lazy(() => import('@/app/(main)/page'))
 const Chat = lazy(() => import('@/app/(main)/chats/[id]/page'))
 const Share = lazy(() => import('@/app/share/v2/[messageId]/page'))
+const Login = lazy(() => import('@/app/(auth)/login/page'))
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/chats/:id" element={<Chat />} />
           <Route path="/share/v2/:messageId" element={<Share />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </Suspense>
     </div>
