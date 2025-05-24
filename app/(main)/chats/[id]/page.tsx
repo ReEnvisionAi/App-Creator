@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { useParams } from "react-router-dom";
 import PageClient from "./page.client";
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState } from "react";
 import type { Chat } from "./page.client";
 
 export default function Page() {
@@ -28,11 +28,7 @@ export default function Page() {
   if (error) return <div className="p-4 text-red-500">{error}</div>;
   if (!chat) return <div className="p-4">Loading...</div>;
 
-  return (
-    <Suspense fallback={<div className="p-4">Loading...</div>}>
-      <PageClient chat={chat} />
-    </Suspense>
-  );
+  return <PageClient chat={chat} />;
 }
 
 const getChatById = async (id: string) => {
