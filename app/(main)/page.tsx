@@ -30,6 +30,7 @@ export default function Home() {
     undefined,
   );
   const [screenshotLoading, setScreenshotLoading] = useState(false);
+  const [authError, setAuthError] = useState(false);
   const selectedModel = MODELS.find((m) => m.value === model);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -74,6 +75,57 @@ export default function Home() {
     .map((text) => (text === "" ? "a" : text))
     .join("\n");
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setAuthError(false);
+
+    // Check authentication status
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (!user || authError) {
+      setAuthError(true);
+      // Redirect to login or show auth error
+      navigate('/login');
+      return;
+    }
+
+    const formData = new FormData(e.currentTarget);
+    startTransition(() => {
+      (async () => {
+        const { prompt, model, quality } = Object.fromEntries(formData);
+
+        // Type validation
+        if (typeof prompt !== "string" || typeof model !== "string" || (quality !== "high" && quality !== "low")) {
+          console.error("Invalid form data types");
+          return;
+        }
+
+        const { chatId, lastMessageId } = await createChat(
+          prompt,
+          model,
+          quality,
+          screenshotUrl,
+        );
+
+        const streamPromise = fetch(
+          "/api/get-next-completion-stream-promise",
+          {
+            method: "POST",
+            body: JSON.stringify({ messageId: lastMessageId, model }),
+          },
+        ).then((res) => {
+          if (!res.body) {
+            throw new Error("No body on response");
+          }
+          return res.body;
+        });
+
+        setStreamPromise(streamPromise);
+        navigate(`/chats/${chatId}`);
+      })();
+    });
+  };
+
   return (
     <div className="relative flex grow flex-col">
       <div className="absolute inset-0 flex justify-center">
@@ -104,46 +156,27 @@ export default function Home() {
             <span className="text-blue-500">app</span>
           </h1>
 
+          {authError && (
+            <div className="mt-4 rounded-md bg-red-50 p-4">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+                </div>
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-red-800">
+                    Authentication Required
+                  </h3>
+                  <div className="mt-2 text-sm text-red-700">
+                    Please log in to create a chat.
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <form
             className="relative w-full max-w-2xl pt-6 lg:pt-12" 
-            onSubmit={async (e) => {
-              e.preventDefault();
-              const formData = new FormData(e.currentTarget);
-              startTransition(() => {
-                (async () => {
-                  const { prompt, model, quality } = Object.fromEntries(formData);
-
-                  // Type validation
-                  if (typeof prompt !== "string" || typeof model !== "string" || (quality !== "high" && quality !== "low")) {
-                    console.error("Invalid form data types");
-                    return;
-                  }
-
-                  const { chatId, lastMessageId } = await createChat(
-                    prompt,
-                    model,
-                    quality,
-                    screenshotUrl,
-                  );
-
-                  const streamPromise = fetch(
-                    "/api/get-next-completion-stream-promise",
-                    {
-                      method: "POST",
-                      body: JSON.stringify({ messageId: lastMessageId, model }),
-                    },
-                  ).then((res) => {
-                    if (!res.body) {
-                      throw new Error("No body on response");
-                    }
-                    return res.body;
-                  });
-
-                  setStreamPromise(streamPromise);
-                  navigate(`/chats/${chatId}`);
-                })();
-              });
-            }}
+            onSubmit={handleSubmit}
           >
             <Fieldset>
               <div className="relative flex w-full max-w-2xl rounded-xl border-4 border-gray-300 bg-white pb-10">
