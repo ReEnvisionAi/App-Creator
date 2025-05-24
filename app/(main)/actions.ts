@@ -32,8 +32,7 @@ export async function createChat(
   if (error) throw error;
 
   let options: ConstructorParameters<typeof Together>[0] = {
-    apiKey: import.meta.env.VITE_TOGETHER_API_KEY,
-    apiKey: import.meta.env.VITE_TOGETHER_API_KEY,
+    apiKey: import.meta.env.VITE_TOGETHER_API_KEY
   };
 
   const together = new Together(options);
