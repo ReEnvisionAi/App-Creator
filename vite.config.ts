@@ -6,14 +6,7 @@ import { fileURLToPath } from 'node:url'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 5173,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5173',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '/src/api')
-      }
-    }
+    port: 5173
   },
   resolve: {
     alias: {
@@ -24,7 +17,6 @@ export default defineConfig({
   define: {
     'process.env': {
       VITE_TOGETHER_API_KEY: JSON.stringify(process.env.VITE_TOGETHER_API_KEY || ''),
-      VITE_OPENAI_API_KEY: JSON.stringify(process.env.VITE_OPENAI_API_KEY || ''), 
       DATABASE_URL: JSON.stringify(process.env.VITE_DATABASE_URL || ''),
       NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
     }

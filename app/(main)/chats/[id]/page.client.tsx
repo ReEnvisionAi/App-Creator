@@ -149,7 +149,7 @@ export default function PageClient({ chat }: { chat: Chat }) {
                     );
 
                     const streamPromise = fetch(
-                      "/api/get-next-completion-stream-promise",
+                      "/src/api/get-next-completion-stream-promise",
                       {
                         method: "POST",
                         headers: {
