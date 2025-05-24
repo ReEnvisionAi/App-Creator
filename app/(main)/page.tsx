@@ -89,6 +89,11 @@ export default function Home() {
       return;
     }
 
+    if (!(e.currentTarget instanceof HTMLFormElement)) {
+      console.error('Event target is not a form element');
+      return;
+    }
+
     const formData = new FormData(e.currentTarget);
     startTransition(() => {
       (async () => {
