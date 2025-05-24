@@ -1,10 +1,10 @@
 import { Routes, Route } from 'react-router-dom'
 import { Suspense, lazy } from 'react'
 
-const Home = lazy(() => import('@/app/(main)/page'))
-const Chat = lazy(() => import('@/app/(main)/chats/[id]/page'))
-const Share = lazy(() => import('@/app/share/v2/[messageId]/page'))
-const Login = lazy(() => import('@/app/(auth)/login/page'))
+const Home = lazy(() => import('../app/(main)/page'))
+const Chat = lazy(() => import('../app/(main)/chats/[id]/page'))
+const Share = lazy(() => import('../app/share/v2/[messageId]/page'))
+const Login = lazy(() => import('../app/(auth)/login/page'))
 
 function App() {
   return (
