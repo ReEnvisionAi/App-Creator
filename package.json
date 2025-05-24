@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "dev": "vite"
+    "dev": "vite",
+    "build": "vite build"
   },
   "dependencies": {
     "use-stick-to-bottom": "^1.0.0",
