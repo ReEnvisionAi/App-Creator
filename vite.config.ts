@@ -13,8 +13,9 @@ export default defineConfig({
   publicDir: 'public',
   define: {
     'process.env': {
-      TOGETHER_API_KEY: JSON.stringify(process.env.TOGETHER_API_KEY || ''),
-      HELICONE_API_KEY: JSON.stringify(process.env.HELICONE_API_KEY || ''),
+      VITE_TOGETHER_API_KEY: JSON.stringify(process.env.VITE_TOGETHER_API_KEY || ''),
+      VITE_OPENAI_API_KEY: JSON.stringify(process.env.VITE_OPENAI_API_KEY || ''),
+      VITE_HELICONE_API_KEY: JSON.stringify(process.env.VITE_HELICONE_API_KEY || ''),
       DATABASE_URL: JSON.stringify(process.env.DATABASE_URL || ''),
       NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
     }
