@@ -1,8 +1,8 @@
 import { z } from "zod";
 import OpenAI from "openai";
 import Together from "together-ai";
-import { MODELS } from "@/lib/constants";
-import { supabase } from "@/lib/supabase";
+import { MODELS } from "../lib/constants.js";
+import { supabase } from "../lib/supabase.js";
 
 export async function handler(req: Request) {
   const { messageId, model } = await req.json();
@@ -47,12 +47,13 @@ export async function handler(req: Request) {
   }
 
   if (selectedModel.provider === "openai") {
-    if (!import.meta.env.VITE_OPENAI_API_KEY) {
+    const openaiApiKey = process.env.VITE_OPENAI_API_KEY;
+    if (!openaiApiKey) {
       return new Response("OpenAI API key not configured", { status: 500 });
     }
 
     const openai = new OpenAI({
-      apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+      apiKey: openaiApiKey,
     });
 
     const stream = await openai.chat.completions.create({
@@ -67,13 +68,14 @@ export async function handler(req: Request) {
   }
 
   let options: ConstructorParameters<typeof Together>[0] = {
-    apiKey: import.meta.env.VITE_TOGETHER_API_KEY,
+    apiKey: process.env.VITE_TOGETHER_API_KEY,
   };
   
-  if (import.meta.env.VITE_HELICONE_API_KEY) {
+  const heliconeApiKey = process.env.VITE_HELICONE_API_KEY;
+  if (heliconeApiKey) {
     options.baseURL = "https://together.helicone.ai/v1";
     options.defaultHeaders = {
-      "Helicone-Auth": `Bearer ${import.meta.env.VITE_HELICONE_API_KEY}`,
+      "Helicone-Auth": `Bearer ${heliconeApiKey}`,
       "Helicone-Property-appname": "LlamaCoder",
       "Helicone-Session-Id": message.chat_id,
       "Helicone-Session-Name": "LlamaCoder Chat",
