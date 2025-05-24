@@ -6,7 +6,7 @@ export default function Page() {
   const { id } = useParams();
   if (!id) throw new Error("No ID provided");
 
-  const chat = getChatById(id);
+  const chat = await getChatById(id);
   if (!chat) throw new Error("Chat not found");
 
   return <PageClient chat={chat} />;
