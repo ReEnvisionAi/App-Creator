@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabase";
 import { useParams } from "react-router-dom";
 import PageClient from "./page.client";
 
-export default function Page() {
+export default async function Page() {
   const { id } = useParams();
   if (!id) throw new Error("No ID provided");
 
