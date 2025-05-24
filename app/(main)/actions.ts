@@ -32,13 +32,13 @@ export async function createChat(
   if (error) throw error;
 
   let options: ConstructorParameters<typeof Together>[0] = {
-    apiKey: process.env.VITE_TOGETHER_API_KEY,
+    apiKey: import.meta.env.VITE_TOGETHER_API_KEY,
   };
   
-  if (process.env.VITE_HELICONE_API_KEY) {
+  if (import.meta.env.VITE_HELICONE_API_KEY) {
     options.baseURL = "https://together.helicone.ai/v1";
     options.defaultHeaders = {
-      "Helicone-Auth": `Bearer ${process.env.VITE_HELICONE_API_KEY}`,
+      "Helicone-Auth": `Bearer ${import.meta.env.VITE_HELICONE_API_KEY}`,
       "Helicone-Property-appname": "LlamaCoder",
       "Helicone-Session-Id": chat.id,
       "Helicone-Session-Name": "LlamaCoder Chat",
