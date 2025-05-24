@@ -149,17 +149,20 @@ export default function PageClient({ chat }: { chat: Chat }) {
                     );
 
                     const streamPromise = fetch(
-                      "/api/get-next-completion-stream-promise",
+                      "/api/get-next-completion-stream-promise.ts",
                       {
                         method: "POST",
-                        body: JSON.stringify({
-                          messageId: message.id,
-                          model: chat.model,
-                        }),
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ messageId: message.id, model: chat.model }),
                       },
                     ).then((res) => {
                       if (!res.body) {
                         throw new Error("No body on response");
+                      }
+                      if (!res.ok) {
+                        throw new Error(`HTTP error! status: ${res.status}`);
                       }
                       return res.body;
                     });

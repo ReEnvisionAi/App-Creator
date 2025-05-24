@@ -7,6 +7,13 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5173',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '/src/api')
+      }
+    }
   },
   resolve: {
     alias: {
@@ -16,17 +23,11 @@ export default defineConfig({
   publicDir: 'public',
   define: {
     'process.env': {
-      VITE_TOGETHER_API_KEY: JSON.stringify(import.meta.env.VITE_TOGETHER_API_KEY || ''),
-      VITE_OPENAI_API_KEY: JSON.stringify(import.meta.env.VITE_OPENAI_API_KEY || ''), 
-      VITE_HELICONE_API_KEY: JSON.stringify(import.meta.env.VITE_HELICONE_API_KEY || ''),
-      DATABASE_URL: JSON.stringify(import.meta.env.VITE_DATABASE_URL || ''),
-      NODE_ENV: JSON.stringify(import.meta.env.MODE || 'development')
+      VITE_TOGETHER_API_KEY: JSON.stringify(process.env.VITE_TOGETHER_API_KEY || ''),
+      VITE_OPENAI_API_KEY: JSON.stringify(process.env.VITE_OPENAI_API_KEY || ''), 
+      VITE_HELICONE_API_KEY: JSON.stringify(process.env.VITE_HELICONE_API_KEY || ''),
+      DATABASE_URL: JSON.stringify(process.env.VITE_DATABASE_URL || ''),
+      NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
     }
-  },
-  build: {
-    target: 'esnext'
-  },
-  optimizeDeps: {
-    exclude: ['@codesandbox/sandpack-react']
   }
 })
