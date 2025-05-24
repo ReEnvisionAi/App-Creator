@@ -4,7 +4,7 @@ import Together from "together-ai";
 import { MODELS } from "@/lib/constants";
 import { supabase } from "@/lib/supabase";
 
-export async function handler(req: Request) {
+export async function POST(req: Request) {
   if (req.method !== 'POST') {
     return new Response('Method not allowed', { status: 405 });
   }
