@@ -4,7 +4,7 @@ import Together from "together-ai";
 import { MODELS } from "../lib/constants.js";
 import { supabase } from "../lib/supabase.js";
 
-export async function handler(req: Request) {
+export default async function handler(req: Request) {
   const { messageId, model } = await req.json();
 
   const { data: message, error: messageError } = await supabase
