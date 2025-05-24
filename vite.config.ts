@@ -6,12 +6,10 @@ import { fileURLToPath } from 'node:url'
 export default defineConfig({
   plugins: [react()],
   server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5173',
-        changeOrigin: true
-      }
-    }
+    middlewareMode: true,
+    fs: {
+      strict: false
+    },
   },
   resolve: {
     alias: {

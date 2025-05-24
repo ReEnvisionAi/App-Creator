@@ -1,13 +1,32 @@
 import { supabase } from "@/lib/supabase";
 import { useParams } from "react-router-dom";
 import PageClient from "./page.client";
+import { useEffect, useState } from "react";
+import type { Chat } from "./page.client";
 
-export default async function Page() {
+export default function Page() {
   const { id } = useParams();
-  if (!id) throw new Error("No ID provided");
+  const [chat, setChat] = useState<Chat | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const chat = await getChatById(id);
-  if (!chat) throw new Error("Chat not found");
+  useEffect(() => {
+    if (!id) {
+      setError("No ID provided");
+      return;
+    }
+
+    getChatById(id)
+      .then((chat) => {
+        if (!chat) throw new Error("Chat not found");
+        setChat(chat);
+      })
+      .catch((err) => {
+        setError(err.message);
+      });
+  }, [id]);
+
+  if (error) return <div className="p-4 text-red-500">{error}</div>;
+  if (!chat) return <div className="p-4">Loading...</div>;
 
   return <PageClient chat={chat} />;
 }
