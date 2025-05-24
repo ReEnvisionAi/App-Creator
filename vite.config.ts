@@ -25,7 +25,6 @@ export default defineConfig({
     'process.env': {
       VITE_TOGETHER_API_KEY: JSON.stringify(process.env.VITE_TOGETHER_API_KEY || ''),
       VITE_OPENAI_API_KEY: JSON.stringify(process.env.VITE_OPENAI_API_KEY || ''), 
-      VITE_HELICONE_API_KEY: JSON.stringify(process.env.VITE_HELICONE_API_KEY || ''),
       DATABASE_URL: JSON.stringify(process.env.VITE_DATABASE_URL || ''),
       NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
     }

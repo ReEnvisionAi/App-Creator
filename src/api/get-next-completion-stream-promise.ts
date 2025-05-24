@@ -91,16 +91,6 @@ export async function POST(req: Request) {
       let options: ConstructorParameters<typeof Together>[0] = {
         apiKey: import.meta.env.VITE_TOGETHER_API_KEY,
       };
-      
-      if (import.meta.env.VITE_HELICONE_API_KEY) {
-        options.baseURL = 'https://together.helicone.ai/v1';
-        options.defaultHeaders = {
-          'Helicone-Auth': `Bearer ${import.meta.env.VITE_HELICONE_API_KEY}`,
-          'Helicone-Property-appname': 'LlamaCoder',
-          'Helicone-Session-Id': message.chat_id,
-          'Helicone-Session-Name': 'LlamaCoder Chat',
-        };
-      }
 
       const together = new Together(options);
 
