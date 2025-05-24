@@ -89,12 +89,8 @@ export default function Home() {
       return;
     }
 
-    if (!(e.currentTarget instanceof HTMLFormElement)) {
-      console.error('Event target is not a form element');
-      return;
-    }
-
-    const formData = new FormData(e.currentTarget);
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
     startTransition(() => {
       (async () => {
         const { prompt, model, quality } = Object.fromEntries(formData);
