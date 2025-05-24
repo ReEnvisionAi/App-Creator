@@ -24,7 +24,7 @@ export default function Home() {
   const navigate = useNavigate();
 
   const [prompt, setPrompt] = useState("");
-  const [model, setModel] = useState(MODELS[0].value);
+  const [model, setModel] = useState("meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo");
   const [quality, setQuality] = useState("high");
   const [screenshotUrl, setScreenshotUrl] = useState<string | undefined>(
     undefined,
