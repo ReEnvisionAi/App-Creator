@@ -109,7 +109,7 @@ export default function Home() {
         );
 
         const streamPromise = fetch(
-          "/api/get-next-completion-stream-promise.ts",
+          "/api/get-next-completion-stream-promise",
           {
             method: "POST",
             body: JSON.stringify({ messageId: lastMessageId, model }),
